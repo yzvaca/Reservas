@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, ModalController } from '@ionic/angular';
+import { NavController, ModalController, ActionSheetController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { PlacesService } from '../../places.service';
 import { Place } from '../../places.model';
@@ -16,7 +16,8 @@ export class PlaceDetailPage implements OnInit {
   constructor(private navCtrl: NavController,
               private route: ActivatedRoute,
               private placesService: PlacesService,
-              private modalCtrl: ModalController) { }
+              private modalCtrl: ModalController,
+              private actionSheetCtrl: ActionSheetController) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(paramMap => {
@@ -30,13 +31,41 @@ export class PlaceDetailPage implements OnInit {
 
   onBookPlace() {
     // this.navCtrl.navigateBack('/places/tabs/discover');
+    this.actionSheetCtrl.create({
+      header: 'Elija una acción',
+      buttons: [
+        {
+          text: 'Elija una fecha',
+          handler: () => {
+            this.openBookingModal('select');
+          }
+        },
+        {
+          text: 'Fecha aleatoria',
+          handler: () => {
+            this.openBookingModal('random');
+          }
+        },
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        }
+      ]
+    })
+    .then(actionSheetEl => {
+      actionSheetEl.present();
+    });
+  }
+
+  openBookingModal(mode: 'select' | 'random') {
+    console.log(mode);
     this.modalCtrl
-      .create({
-        component: CreateBookingComponent,
-        componentProps: {selectedPlace: this.place}})
-      .then(modalEl => {
-        modalEl.present();
-        return modalEl.onDidDismiss();
+    .create({
+      component: CreateBookingComponent,
+      componentProps: {selectedPlace: this.place}})
+    .then(modalEl => {
+      modalEl.present();
+      return modalEl.onDidDismiss();
     })
     .then(resultData => {
       console.log(resultData.data, resultData.role);
@@ -45,5 +74,4 @@ export class PlaceDetailPage implements OnInit {
       }
     });
   }
-
 }
