@@ -4,9 +4,58 @@
       <ion-back-button defaultHref="places/tabs/offers"></ion-back-button>
     </ion-buttons>
     <ion-title>Nueva Oferta</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button (click)="onCreateOffer()" [disabled]="!form.valid">
+        <ion-icon name="checkmark" slot="icon-only" ></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-button class="ion-margin" color="primary" [routerLink]="">Editar</ion-button>
+  <form [formGroup]="form">
+    <ion-grid>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-item>
+            <ion-label position="floating">Título</ion-label>
+            <ion-input type="text" autocomplete autocorrect formControlName="title"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-label position="floating">Descripción</ion-label>
+          <ion-textarea rows="3" formControlName="description"></ion-textarea>
+        </ion-col>
+      </ion-row>
+      <ion-row *ngIf="!form.get('description').valid && form.get('description').touched">
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-text color="danger">Descripción estar entre 1 y 180 caracteres</ion-text>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+      <ion-col size-sm="6" offset-sm="3">
+          <ion-item>
+            <ion-label position="floating">Precio</ion-label>
+            <ion-input type="number" formControlName="price"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="3" offset-sm="3">
+          <ion-item>
+            <ion-label position="floating">Disponible desde</ion-label>
+            <ion-datetime min="2020-01-01" max="2025-12-31" formControlName="dateFrom"></ion-datetime>
+          </ion-item>
+        </ion-col>
+        <ion-col size-sm="3">
+          <ion-item>
+            <ion-label position="floating">Disponible hasta</ion-label>
+            <ion-datetime min="2020-01-02" max="2025-12-31" formControlName="dateTo"></ion-datetime>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
 </ion-content>

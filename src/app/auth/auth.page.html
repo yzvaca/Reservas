@@ -1,11 +1,51 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Ingresar Credenciales</ion-title>
+    <ion-title>{{ isLogin ? 'Iniciar Sesión' : 'Registrarse'}}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-button color="primary" (click)="onLogin()" class="ion-margin">
-    Iniciar Sesión
-  </ion-button>
+<ion-content class="ion-padding">
+  <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+    <ion-grid>
+      <ion-row>
+        <ion-col size-sm=6 offset-sm="3">
+          <ion-list>
+            <ion-item>
+              <ion-label position="floating">Correo</ion-label>
+              <ion-input type="email" ngModel name="email" required #emailCtrl="ngModel"></ion-input>                
+            </ion-item>
+            <ion-item *ngIf="!emailCtrl.valid &&emailCtrl.touched" lines="none">
+              <ion-label>Debería ser un correo válido</ion-label>    
+            </ion-item>
+            <ion-item>
+              <ion-label position="floating">Contraseña</ion-label>
+              <ion-input type="password" ngModel name="password" required minlength="6" #passwordCtrl="ngModel"></ion-input>
+            </ion-item>
+            <ion-item *ngIf="!passwordCtrl.valid &&passwordCtrl.touched" lines="none">
+              <ion-label>Debería tener al menos 6 caracteres</ion-label>    
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm=6 offset-sm="3">
+          <ion-button 
+            type="button" 
+            color="primary" 
+            fill="clear" 
+            expand="block"
+            (click)="onSwitchAuthMode()">
+            Cambiar a {{ isLogin ? 'Registrarse' : 'Iniciar Sesión'}}</ion-button>
+          <ion-button 
+            type="submit" 
+            color="primary" 
+            (click)="onLogin()" 
+            expand="block" 
+            [disabled]="!f.valid">
+            Iniciar Sesión
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
 </ion-content>
