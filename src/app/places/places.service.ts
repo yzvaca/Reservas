@@ -11,21 +11,27 @@ export class PlacesService {
       'Mansion',
       'Una casa gigantastica',
       'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-      152.52
+      152.52,
+      new Date('2020-01-01'),
+      new Date('2020-06-20')
     ),
     new Place(
       'p2',
       'Casita',
       'Una casita bonita',
       'https://images.pexels.com/photos/1396122/pexels-photo-1396122.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-      122.87
+      122.87,
+      new Date('2020-01-01'),
+      new Date('2020-06-20')
     ),
     new Place(
       'p3',
       'Casanga',
       'Una casanga bonita',
       'https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-      142.45
+      142.45,
+      new Date('2020-01-01'),
+      new Date('2020-06-20')
     )
   ];
 
