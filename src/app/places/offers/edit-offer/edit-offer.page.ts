@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlacesService } from '../../places.service';
-import { NavController, LoadingController } from '@ionic/angular';
+import { NavController, LoadingController, AlertController } from '@ionic/angular';
 import { Place } from '../../places.model';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -13,15 +13,18 @@ import { Subscription } from 'rxjs';
 })
 export class EditOfferPage implements OnInit, OnDestroy {
   place: Place;
+  placeId: string;
   form: FormGroup;
   private placeSub: Subscription;
+  isLoading = false;
 
   constructor(
     private route: ActivatedRoute,
     private placesService: PlacesService,
     private navCtrl: NavController,
     private router: Router,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private alertCtrl: AlertController
   ) { }
 
   ngOnInit() {
@@ -30,6 +33,8 @@ export class EditOfferPage implements OnInit, OnDestroy {
         this.navCtrl.navigateBack('/places/tabs/offers');
         return;
       }
+      this.placeId = paramMap.get('placeId');
+      this.isLoading = true;
       this.placeSub = this.placesService.getPlace(paramMap.get('placeId')).subscribe(place => {
         this.place = place;
         this.form = new FormGroup({
@@ -41,6 +46,17 @@ export class EditOfferPage implements OnInit, OnDestroy {
             updateOn: 'blur',
             validators: [Validators.required, Validators.maxLength(180)]
           })
+        });
+        this.isLoading = false;
+      }, error =>{
+        this.alertCtrl.create({
+          header: 'Ha ocurrido un error',
+          message: 'No se encontro el lugar. Por favor intente de nuevo más tarde',
+          buttons: [{ text: 'Ok', handler: () => {
+            this.router.navigate(['/places/tabs/offers']);
+          }}]
+        }).then(alertEl => {
+          alertEl.present();
         });
       });
     });

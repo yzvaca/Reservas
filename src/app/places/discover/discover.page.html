@@ -1,22 +1,29 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Descubre Lugares</ion-title>
+    <ion-title>Descubra Lugares</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
   <ion-segment (ionChange)="onFilterUpdate($event)">
     <ion-segment-button value="all" checked>Todos los lugares</ion-segment-button>
-    <ion-segment-button value="bookable">Lugares reservables</ion-segment-button>
+    <ion-segment-button value="bookable">Lugares para reservar</ion-segment-button>
   </ion-segment>
-  <ion-grid *ngIf="!relevantPlaces || relevantPlaces.length <= 0">
+  <ion-grid *ngIf="isLoading">
+    <ion-row>
+      <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
+        <ion-spinner color="primary"></ion-spinner>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-grid *ngIf="!isLoading && (!relevantPlaces || relevantPlaces.length <= 0)">
     <ion-row>
       <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
         <p>No hay lugares para rentar, por favor intente más tarde!</p>
       </ion-col>
     </ion-row>
   </ion-grid>
-  <ion-grid *ngIf="relevantPlaces.length > 0">
+  <ion-grid *ngIf="!isLoading && relevantPlaces.length > 0">
     <ion-row>
       <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
         <ion-card>

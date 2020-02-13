@@ -16,10 +16,18 @@ export class OffersPage implements OnInit , OnDestroy {
   constructor(private placesService: PlacesService, private router: Router) { }
   offers: Place[];
   private placesSub: Subscription;
+  isLoading = false;
 
   ngOnInit() {
     this.placesSub = this.placesService.places.subscribe(places => {
       this.offers = places;
+    });
+  }
+
+  ionViewWillEnter() {
+    this.isLoading = true;
+    this.placesService.fetchPlaces().subscribe(() => {
+      this.isLoading = false;
     });
   }
 
