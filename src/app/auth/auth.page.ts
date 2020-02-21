@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from './auth.service';
+import { AuthService, AuthResponseData } from './auth.service';
 import { Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, AlertController } from '@ionic/angular';
 import { NgForm } from '@angular/forms';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-auth',
@@ -13,23 +14,45 @@ export class AuthPage implements OnInit {
   isLoading: boolean;
   isLogin = true;
 
-  constructor(private authService: AuthService, private router: Router, private loadingCtrl: LoadingController) { }
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private loadingCtrl: LoadingController,
+    private alertCtrl: AlertController) { }
 
   ngOnInit() {
   }
 
-  onLogin() {
+  authenticate(email: string, password: string) {
     this.isLoading = true;
-    this.authService.login();
     this.loadingCtrl
     .create({keyboardClose: true, message: 'Iniciando sesión...'})
     .then(loadingEl => {
       loadingEl.present();
-      setTimeout(() => {
+      let authObs: Observable<AuthResponseData>;
+      if (this.isLogin) {
+        authObs = this.authService.login(email, password);
+      } else {
+        authObs = this.authService.signup(email, password);
+      }
+      authObs.subscribe(resData => {
+        console.log(resData);
         this.isLoading = false;
         loadingEl.dismiss();
         this.router.navigateByUrl('/places/tabs/discover');
-      }, 1500);
+      }, errorRes => {
+        loadingEl.dismiss();
+        const code = errorRes.error.error.message;
+        let message = 'No se logró iniciar sesión, por favor intente de nuevo.';
+        if (code === 'EMAIL_EXISTS') {
+          message = 'Esta dirección de email ya existe!';
+        } else if (code === 'EMAIL_NOT_FOUND') {
+          message = 'No se pudo encontrar la dirección de correo.';
+        } else if (code === 'INVALID_PASSWORD') {
+          message = 'Contraseña incorrecta.';
+        }
+        this.showAlert(message);
+      });
     });
   }
 
@@ -43,12 +66,19 @@ export class AuthPage implements OnInit {
     }
     const email = form.value.email;
     const password = form.value.password;
-    console.log(email, password);
 
-    if (this.isLogin) {
-      //mandar peticion a servidores de inicio de sesion
-    } else {
-      //mandar peticion a servidores de registro
-    }
+    this.authenticate(email, password);
+    form.reset();
+  }
+
+  private showAlert(message: string) {
+    this.alertCtrl.create({
+      header: 'Autenticación fallida!',
+      message: message,
+      buttons: ['Ok']
+    })
+    .then(alertEl => {
+      alertEl.present();
+    });
   }
 }

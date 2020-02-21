@@ -39,10 +39,9 @@
           <ion-button 
             type="submit" 
             color="primary" 
-            (click)="onLogin()" 
             expand="block" 
             [disabled]="!f.valid">
-            Iniciar Sesión
+            {{ isLogin ? 'Iniciar Sesión' : 'Registrarse'}}
           </ion-button>
         </ion-col>
       </ion-row>
