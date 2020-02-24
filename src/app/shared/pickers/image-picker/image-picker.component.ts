@@ -1,7 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, Input } from '@angular/core';
 import { Plugins, Capacitor, CameraSource, CameraResultType } from '@capacitor/core';
 import { Platform } from '@ionic/angular';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-image-picker',
@@ -10,12 +9,12 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 })
 export class ImagePickerComponent implements OnInit {
   @Output() imagePick = new EventEmitter<string | File>();
-  @ViewChild('filePicker', {static: false}) filePickerRef: ElementRef<HTMLInputElement>;
+  @ViewChild('filePicker') filePickerRef: ElementRef<HTMLInputElement>;
   @Input() showPreview = false;
   selectedImage: string;
   usePicker = false;
 
-  constructor(private platform: Platform, private sanitizer: DomSanitizer) { }
+  constructor(private platform: Platform) { }
 
   ngOnInit() {
     if ((this.platform.is('mobile') && !this.platform.is('hybrid')) || this.platform.is('desktop')) {
