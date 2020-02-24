@@ -5,8 +5,8 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-segment (ionChange)="onFilterUpdate($event)">
-    <ion-segment-button value="all" checked>Todos los lugares</ion-segment-button>
+  <ion-segment (ionChange)="onFilterUpdate($event)" value="all">
+    <ion-segment-button value="all">Todos los lugares</ion-segment-button>
     <ion-segment-button value="bookable">Lugares para reservar</ion-segment-button>
   </ion-segment>
   <ion-grid *ngIf="isLoading">

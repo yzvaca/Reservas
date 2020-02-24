@@ -35,7 +35,11 @@ function base64toBlob(base64Data, contentType) {
 export class NewOfferPage implements OnInit {
   form: FormGroup;
 
-  constructor(private placesService: PlacesService, private router: Router, private loadingCtrl: LoadingController) { }
+  constructor(
+    private placesService: PlacesService,
+    private router: Router,
+    private loadingCtrl: LoadingController,
+  ) { }
 
   ngOnInit() {
     this.form = new FormGroup({
@@ -74,8 +78,7 @@ export class NewOfferPage implements OnInit {
     let imageFile;
     if (typeof (imageData) === 'string') {
       try {
-        imageFile = base64toBlob(imageData.toString().replace('data:image/jpeg;base64,', ''), 'image/jpeg');
-        console.log(imageFile);
+        imageFile = base64toBlob(imageData.replace('data:image/png;base64,', ''), 'image/jpeg');
       } catch (error) {
         console.log(error);
         return;
@@ -83,7 +86,7 @@ export class NewOfferPage implements OnInit {
     } else {
       imageFile = imageData;
     }
-    this.form.patchValue({ image: imageFile});
+    this.form.patchValue({ image: imageFile });
   }
 
   onCreateOffer() {
@@ -105,11 +108,11 @@ export class NewOfferPage implements OnInit {
           uploadRes.imageUrl
         );
       }))
-      .subscribe(() => {
-        loadingEl.dismiss();
-        this.form.reset();
-        this.router.navigate(['/places/tabs/offers']);
-      });
+        .subscribe(() => {
+          loadingEl.dismiss();
+          this.form.reset();
+          this.router.navigate(['/places/tabs/offers']);
+        });
     });
   }
 }

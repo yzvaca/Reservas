@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, Input } from '@angular/core';
 import { Plugins, Capacitor, CameraSource, CameraResultType } from '@capacitor/core';
 import { Platform } from '@ionic/angular';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-image-picker',
@@ -14,7 +15,7 @@ export class ImagePickerComponent implements OnInit {
   selectedImage: string;
   usePicker = false;
 
-  constructor(private platform: Platform) { }
+  constructor(private platform: Platform, private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
     if ((this.platform.is('mobile') && !this.platform.is('hybrid')) || this.platform.is('desktop')) {
@@ -33,10 +34,10 @@ export class ImagePickerComponent implements OnInit {
       correctOrientation: true,
       height: 320,
       width: 200,
-      resultType: CameraResultType.Base64
+      resultType: CameraResultType.DataUrl
     }).then(image => {
-      this.selectedImage = image.base64String;
-      this.imagePick.emit(image.base64String);
+      this.selectedImage = image.dataUrl;
+      this.imagePick.emit(image.dataUrl);
     }).catch(error => {
       console.log(error);
       if (this.usePicker) {
